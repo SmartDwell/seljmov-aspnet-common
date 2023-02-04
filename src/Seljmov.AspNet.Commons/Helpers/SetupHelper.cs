@@ -29,17 +29,13 @@ public static class SetupHelper
         var jwtOptionsSection = builder.Configuration.GetSection(nameof(JwtOptions));
         var jwtOptions = jwtOptionsSection.Get<JwtOptions>();
 
-        if (jwtOptions == null)
+        if (jwtOptions is null)
             throw new Exception("JwtOptions is null");
         
         builder.Services.AddOptions<JwtOptions>()
             .Bind(jwtOptionsSection);
             
-        builder.Services.AddAuthentication(options => {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
@@ -47,12 +43,12 @@ public static class SetupHelper
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = jwtOptions?.GetSymmetricSecurityKey(),
+                    IssuerSigningKey = jwtOptions.GetSymmetricSecurityKey(),
                     ValidateIssuer = true,
-                    ValidIssuer = jwtOptions?.Issuer,
+                    ValidIssuer = jwtOptions.Issuer,
                     ValidateAudience = true,
-                    ValidAudience = $"*.{jwtOptions?.Issuer}",
-                    ValidateLifetime = true
+                    ValidAudience = jwtOptions.Audience,
+                    ValidateLifetime = true,
                 };
             });
         

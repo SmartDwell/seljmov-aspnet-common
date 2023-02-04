@@ -38,5 +38,5 @@ public class JwtOptions
     /// <summary>
     /// Получить симметричный ключ шифрования
     /// </summary>
-    public SymmetricSecurityKey GetSymmetricSecurityKey() => new(Encoding.ASCII.GetBytes(Key));
+    public SymmetricSecurityKey GetSymmetricSecurityKey() => new(Encoding.UTF8.GetBytes(Key));
 }
