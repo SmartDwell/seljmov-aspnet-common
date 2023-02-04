@@ -44,7 +44,7 @@ public class JwtReader
             ValidateIssuer = true,
             ValidIssuer = _jwtOptions.Value.Issuer,
             ValidateAudience = true,
-            ValidAudience = $"*.{_jwtOptions.Value.Issuer}",
+            ValidAudience = _jwtOptions.Value.Audience,
             ValidateLifetime = true
         };
         
