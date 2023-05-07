@@ -23,34 +23,39 @@ public static class SetupHelper
     /// Конфигурация сервиса
     /// </summary>
     /// <param name="builder">Билдер</param>
+    /// <param name="buildOptions">Опции билда</param>
     /// <returns>Сконфигурированное приложение</returns>
-    public static WebApplication BuildWebApplication(this WebApplicationBuilder builder)
+    public static WebApplication BuildWebApplication(this WebApplicationBuilder builder, BuildOptions? buildOptions)
     {
-        var jwtOptionsSection = builder.Configuration.GetSection(nameof(JwtOptions));
-        var jwtOptions = jwtOptionsSection.Get<JwtOptions>();
+        buildOptions ??= new BuildOptions();
+        if (buildOptions.UseJwtAuthentication)
+        {
+            var jwtOptionsSection = builder.Configuration.GetSection(nameof(JwtOptions));
+            var jwtOptions = jwtOptionsSection.Get<JwtOptions>();
 
-        if (jwtOptions is null)
-            throw new Exception("JwtOptions is null");
+            if (jwtOptions is null)
+                throw new Exception("JwtOptions is null");
         
-        builder.Services.AddOptions<JwtOptions>()
-            .Bind(jwtOptionsSection);
+            builder.Services.AddOptions<JwtOptions>()
+                .Bind(jwtOptionsSection);
             
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = jwtOptions.GetSymmetricSecurityKey(),
-                    ValidateIssuer = true,
-                    ValidIssuer = jwtOptions.Issuer,
-                    ValidateAudience = true,
-                    ValidAudience = jwtOptions.Audience,
-                    ValidateLifetime = true,
-                };
-            });
+                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = jwtOptions.GetSymmetricSecurityKey(),
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtOptions.Issuer,
+                        ValidateAudience = true,
+                        ValidAudience = jwtOptions.Audience,
+                        ValidateLifetime = true,
+                    };
+                });
+        }
         
         var appName = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Name;
         var appVersion = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString();
@@ -63,15 +68,19 @@ public static class SetupHelper
                 Version = appVersion
             });
 
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()  
-            {  
-                Name = "Authorization",  
-                Type = SecuritySchemeType.ApiKey,  
-                Scheme = "Bearer",  
-                BearerFormat = "JWT",  
-                In = ParameterLocation.Header,  
-                Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"", 
-            });
+            if (buildOptions.UseJwtAuthentication)
+            {
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()  
+                {  
+                    Name = "Authorization",  
+                    Type = SecuritySchemeType.ApiKey,  
+                    Scheme = "Bearer",  
+                    BearerFormat = "JWT",  
+                    In = ParameterLocation.Header,  
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"", 
+                });
+            }
+            
             c.AddSecurityRequirement(new OpenApiSecurityRequirement  
             {  
                 {  
