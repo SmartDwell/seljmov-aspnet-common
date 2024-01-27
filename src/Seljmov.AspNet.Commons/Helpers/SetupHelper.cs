@@ -25,7 +25,7 @@ public static class SetupHelper
     /// <param name="builder">Билдер</param>
     /// <param name="buildOptions">Опции билда</param>
     /// <returns>Сконфигурированное приложение</returns>
-    public static WebApplication BuildWebApplication(this WebApplicationBuilder builder, BuildOptions? buildOptions)
+    public static WebApplication BuildWebApplication(this WebApplicationBuilder builder, BuildOptions? buildOptions = null)
     {
         buildOptions ??= new BuildOptions();
         if (buildOptions.UseJwtAuthentication)
@@ -79,25 +79,25 @@ public static class SetupHelper
                     In = ParameterLocation.Header,  
                     Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"", 
                 });
-            }
-            
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement  
-            {  
+                
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement  
                 {  
-                    new OpenApiSecurityScheme  
                     {  
-                        Reference = new OpenApiReference  
+                        new OpenApiSecurityScheme  
                         {  
-                            Type = ReferenceType.SecurityScheme,  
-                            Id = "Bearer"  
+                            Reference = new OpenApiReference  
+                            {  
+                                Type = ReferenceType.SecurityScheme,  
+                                Id = "Bearer"  
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
                         },
-                        Scheme = "oauth2",
-                        Name = "Bearer",
-                        In = ParameterLocation.Header,
-                    },
-                    Array.Empty<string>()
-                }  
-            });
+                        Array.Empty<string>()
+                    }  
+                });
+            }
 
             c.AddEnumsWithValuesFixFilters();
             c.UseAllOfToExtendReferenceSchemas();
@@ -134,9 +134,12 @@ public static class SetupHelper
 
         app.UseRouting();
 
-        logger.LogInformation($"Use JWT authorization.");
-        app.UseAuthentication();
-        app.UseAuthorization();
+        if (buildOptions.UseJwtAuthentication)
+        {
+            logger.LogInformation($"Use JWT authorization.");
+            app.UseAuthentication();
+            app.UseAuthorization();
+        }
 
         logger.LogInformation($"Use controllers.");
         app.UseEndpoints(endpoints => endpoints.MapControllers());
