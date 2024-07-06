@@ -134,6 +134,16 @@ public static class SetupHelper
 
         app.UseRouting();
 
+        if (buildOptions.UseCors)
+        {
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
+        }
+
         if (buildOptions.UseJwtAuthentication)
         {
             logger.LogInformation($"Use JWT authorization.");
