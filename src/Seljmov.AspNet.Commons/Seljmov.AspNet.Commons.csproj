@@ -10,16 +10,21 @@
         <AssemblyName>Seljmov.AspNet.Commons</AssemblyName>
         <RootNamespace>Seljmov.AspNet.Commons</RootNamespace>
         <Authors>Zagidin Selimov</Authors>
-        <Copyright>Copyright © Thesis System</Copyright>
+        <Copyright>Copyright © Zagidin Selimov</Copyright>
         <PackageReleaseNotes>Register middleware for web apps (microservices).</PackageReleaseNotes>
         <NoPackageAnalysis>true</NoPackageAnalysis>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
     </PropertyGroup>
 
     <PropertyGroup>
-        <VersionPrefix>1.2.0</VersionPrefix>
+        <VersionPrefix>1.2.1</VersionPrefix>
         <VersionSuffix>alpha</VersionSuffix>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="readme.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />

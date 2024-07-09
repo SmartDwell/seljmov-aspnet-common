@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.2.1] - 09 Jul 2024
+- Added readme.md file information into csproj file.
+
 ## [1.2.0] - 09 Jul 2024
 - Added support for authentication policies.
 - Added Readme.md file.
