@@ -9,18 +9,20 @@ using Seljmov.AspNet.Commons.Options;
 namespace Seljmov.AspNet.Commons.Helpers;
 
 /// <summary>
-/// Класс для чтения Jwt
+/// Jwt reader.
 /// </summary>
+/// <remarks>[Ru] Читатель Jwt.</remarks>
 public class JwtReader
 {
     private readonly IOptions<JwtOptions> _jwtOptions;
     private readonly ILogger<JwtReader> _logger;
 
     /// <summary>
-    /// Конструктор класса <see cref="JwtReader"/>
+    /// Constructor for <see cref="JwtReader"/>.
     /// </summary>
-    /// <param name="jwtOptions">Настройки jwt</param>
-    /// <param name="logger">Логгер</param>
+    /// <remarks>[Ru] Конструктор для <see cref="JwtReader"/>.</remarks>
+    /// <param name="jwtOptions">Jwt options.</param>
+    /// <param name="logger">Logger.</param>
     public JwtReader(IOptions<JwtOptions> jwtOptions, ILogger<JwtReader> logger)
     {
         _jwtOptions = jwtOptions;
@@ -28,12 +30,13 @@ public class JwtReader
     }
 
     /// <summary>
-    /// Прочитать Jwt
+    /// Read access token.
     /// </summary>
-    /// <param name="token">Jwt</param>
-    /// <param name="claims">Данные пользователя</param>
-    /// <param name="validTo">Дата валидности</param>
-    /// <returns></returns>
+    /// <remarks>[Ru] Прочитать токен доступа.</remarks>
+    /// <param name="token">Jwt token.</param>
+    /// <param name="claims">Claims.</param>
+    /// <param name="validTo">Valid to.</param>
+    /// <returns>True if token is valid, otherwise false.</returns>
     public bool ReadAccessToken(string token, out ClaimsPrincipal? claims, out DateTime validTo)
     {
         var tokenHandler = new JwtSecurityTokenHandler();

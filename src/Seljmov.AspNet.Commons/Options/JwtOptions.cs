@@ -4,39 +4,45 @@ using Microsoft.IdentityModel.Tokens;
 namespace Seljmov.AspNet.Commons.Options;
 
 /// <summary>
-/// Настройки JWT-токена
+/// JWT options.
 /// </summary>
+/// <remarks>[Ru] Опции JWT.</remarks>
 public class JwtOptions
 {
     /// <summary>
-    /// Издатель токена
+    /// Issuer of token.
     /// </summary>
+    /// <remarks>[Ru] Издатель токена.</remarks>
     public string Issuer { get; set; } = string.Empty;
     
     /// <summary>
-    /// Потребитель токена
+    /// Audience of token.
     /// </summary>
+    /// <remarks>[Ru] Потребитель токена.</remarks>
     public string Audience { get; set; } = string.Empty;
     
     /// <summary>
-    /// Ключ шифрования
+    /// Key for token.
     /// </summary>
+    /// <remarks>[Ru] Ключ для токена.</remarks>
     public string Key { get; set; } = string.Empty;
     
     /// <summary>
-    /// Время жизни токена доступа
+    /// Access token lifetime (in minutes).
     /// </summary>
-    /// <remarks>Время в минутах</remarks>
+    /// <remarks>[Ru] Время жизни токена доступа (в минутах).</remarks>
     public int AccessTokenLifetime { get; set; }
     
     /// <summary>
-    /// Время жизни токена обновления
+    /// Refresh token lifetime (in minutes).
     /// </summary>
-    /// <remarks>Время в минутах</remarks>
+    /// <remarks>[Ru] Время жизни токена обновления (в минутах).</remarks>
     public int RefreshTokenLifetime { get; set; }
     
     /// <summary>
-    /// Получить симметричный ключ шифрования
+    /// Get symmetric security key.
     /// </summary>
+    /// <remarks>[Ru] Получить симметричный ключ безопасности.</remarks>
+    /// <returns>Symmetric security key.</returns>
     public SymmetricSecurityKey GetSymmetricSecurityKey() => new(Encoding.UTF8.GetBytes(Key));
 }
