@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,20 @@ public static class SetupHelper
     public static WebApplication BuildWebApplication(this WebApplicationBuilder builder, BuildOptions? buildOptions = null)
     {
         buildOptions ??= new BuildOptions();
+
+        if (buildOptions.UseCors)
+        {
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                        .SetIsOriginAllowed(_ => true);
+                });
+            });
+        }
 
         ConfigureJwtAuthentication(builder, buildOptions);
 
@@ -80,7 +95,13 @@ public static class SetupHelper
             {
                 foreach (var policy in buildOptions.AuthenticationPolicies)
                 {
-                    options.AddPolicy(policy, policyBuilder => policyBuilder.RequireClaim("Permission", policy));
+                    options.AddPolicy(policy, policyBuilder =>
+                    {
+                        policyBuilder.RequireAssertion(context =>
+                        {
+                            return context.User.Claims.Any(claim => claim.Type == ClaimTypes.Role && claim.Value.Contains(policy, StringComparison.InvariantCultureIgnoreCase));
+                        });
+                    });
                 }
             });
         }
@@ -164,10 +185,7 @@ public static class SetupHelper
 
         if (buildOptions.UseCors)
         {
-            app.UseCors(x => x.AllowAnyMethod()
-                              .AllowAnyHeader()
-                              .SetIsOriginAllowed(origin => true)
-                              .AllowCredentials());
+            app.UseCors("AllowAll");
         }
 
         if (buildOptions.UseJwtAuthentication)

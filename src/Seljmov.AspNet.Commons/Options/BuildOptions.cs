@@ -18,7 +18,7 @@ public class BuildOptions
     /// Use CORS.
     /// </summary>
     /// <remarks>[Ru] Использовать CORS.</remarks>
-    public bool UseCors { get; set; } = true;
+    public bool UseCors { get; set; }
 
     /// <summary>
     /// Authentication policies.

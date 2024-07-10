@@ -14,16 +14,16 @@
         <PackageReleaseNotes>Register middleware for web apps (microservices).</PackageReleaseNotes>
         <NoPackageAnalysis>true</NoPackageAnalysis>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageReadmeFile>readme.md</PackageReadmeFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <PropertyGroup>
-        <VersionPrefix>1.2.1</VersionPrefix>
+        <VersionPrefix>1.2.4</VersionPrefix>
         <VersionSuffix>alpha</VersionSuffix>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="readme.md" Pack="true" PackagePath="\"/>
+        <None Include="README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <ItemGroup>

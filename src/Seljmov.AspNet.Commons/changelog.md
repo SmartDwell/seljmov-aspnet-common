@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.4] - 10 Jul 2024
+- Added RequireAssertion to policies.
+
+## [1.2.3] - 09 Jul 2024
+- Fixed support for CORS configuration: remove .AllowAnyOrigin().
+
+## [1.2.2] - 09 Jul 2024
+- Fixed support for CORS configuration.
+- Rename readme.md file to README.md.
+
 ## [1.2.1] - 09 Jul 2024
 - Added readme.md file information into csproj file.
 
